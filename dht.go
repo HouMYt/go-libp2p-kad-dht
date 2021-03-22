@@ -514,7 +514,7 @@ func (dht *IpfsDHT) fixLowPeers(ctx context.Context) {
 // TODO This is hacky, horrible and the programmer needs to have his mother called a hamster.
 // SHOULD be removed once https://github.com/libp2p/go-libp2p/issues/800 goes in.
 func (dht *IpfsDHT) persistRTPeersInPeerStore() {
-	tickr := time.NewTicker(peerstore.RecentlyConnectedAddrTTL / 3)
+	tickr := time.NewTicker(peerstore.TempAddrTTL / 10)
 	defer tickr.Stop()
 
 	for {
@@ -522,7 +522,7 @@ func (dht *IpfsDHT) persistRTPeersInPeerStore() {
 		case <-tickr.C:
 			ps := dht.routingTable.ListPeers()
 			for _, p := range ps {
-				dht.peerstore.UpdateAddrs(p, peerstore.RecentlyConnectedAddrTTL, peerstore.RecentlyConnectedAddrTTL)
+				dht.peerstore.UpdateAddrs(p, peerstore.TempAddrTTL, peerstore.TempAddrTTL)
 			}
 		case <-dht.ctx.Done():
 			return
